@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  id          Int           @unique(map: "id") @default(autoincrement())
+  name        String        @db.VarChar(255)
+  slug        String        @db.VarChar(255)
+  subcategory subcategory[]
+}
+
+model subcategory {
+  id               Int      @id @default(autoincrement())
+  subcategory_name String   @db.VarChar(255)
+  categoryID       Int
+  slug             String   @db.VarChar(255)
+  category         category @relation(fields: [categoryID], references: [id], onUpdate: Restrict, map: "fk_foreign_key_name")
+
+  @@index([categoryID], map: "categoryID")
+}
